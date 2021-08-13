@@ -34,6 +34,9 @@ jobs:
         with:
           context: .
           file: Dockerfile.${{ matrix.ARCH }}
+          build-args: |
+            ARCH=${{ matrix.ARCH }}
+            PYTHON_VERSION=${{ matrix.PYTHON_VERSION }}
           push: true
           tags: codablock/pyinstaller-images:${{ matrix.PYTHON_VERSION }}-${{ matrix.ARCH }}-latest
           cache-from: type=gha
