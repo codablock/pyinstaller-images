@@ -1,0 +1,23 @@
+FROM debian:buster
+
+RUN dpkg --add-architecture i386
+RUN apt update && apt -y install wget gnupg2 software-properties-common && rm -rf /var/lib/apt/lists/*
+RUN wget -qO - https://dl.winehq.org/wine-builds/winehq.key | apt-key add -
+RUN apt-add-repository https://dl.winehq.org/wine-builds/debian/
+
+RUN wget -O- -q https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/Release.key | apt-key add -
+RUN echo "deb http://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10 ./" | tee /etc/apt/sources.list.d/wine-obs.list
+
+RUN apt update && \
+    apt install -y winehq-stable xvfb && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN cd /usr/bin && wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks && chmod +x winetricks
+RUN winetricks win81
+
+ARG PYTHON_VERSION=3.8.10
+ENV PYTHON_PATH="c:/python"
+RUN (Xvfb :1 -screen 0 1280x960x24 &) && export DISPLAY=:1 && \
+    wget https://www.python.org/ftp/python/$PYTHON_VERSION/python-$PYTHON_VERSION-amd64.exe && \
+    wine python-$PYTHON_VERSION-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 TargetDir=$PYTHON_PATH && \
+    rm python-$PYTHON_VERSION-amd64.exe
