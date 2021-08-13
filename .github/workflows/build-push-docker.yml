@@ -8,6 +8,10 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ARCH: [linux, wine]
+        PYTHON_VERSION: [3.8.11, 3.9.6]
     steps:
       -
         name: Checkout
@@ -29,18 +33,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile.linux
+          file: Dockerfile.${{ matric.ARCH }}
           push: true
-          tags: codablock/pyinstaller-images:latest-linux
+          tags: codablock/pyinstaller-images:${{ matrix.PYTHON_VERSION }}-${{ matrix.ARCH }}-latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      -
-        name: Build and push wine
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: Dockerfile.wine
-          push: true
-          tags: codablock/pyinstaller-images:latest-wine
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+
