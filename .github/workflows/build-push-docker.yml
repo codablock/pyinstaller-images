@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile.${{ matric.ARCH }}
+          file: Dockerfile.${{ matrix.ARCH }}
           push: true
           tags: codablock/pyinstaller-images:${{ matrix.PYTHON_VERSION }}-${{ matrix.ARCH }}-latest
           cache-from: type=gha
