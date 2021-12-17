@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         ARCH: [linux, wine]
-        PYTHON_VERSION: [3.8.10, 3.9.6]
+        PYTHON_VERSION: [3.8.12, 3.9.9, 3.10.1]
     steps:
       -
         name: Checkout
